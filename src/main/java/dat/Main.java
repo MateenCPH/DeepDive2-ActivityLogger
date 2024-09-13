@@ -1,34 +1,33 @@
 package dat;
 
+import dat.config.HibernateConfig;
+import dat.dtos.ActivityDTO;
 import dat.dtos.CityInfoDTO;
 import dat.dtos.WeatherInfoDTO;
+import dat.services.ActivityService;
 import dat.services.CityService;
 import dat.services.WeatherService;
+import jakarta.persistence.EntityManagerFactory;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
+
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("activitylogger");
+
 // Record the start time
         long startTime = System.currentTimeMillis();
         String cityName = "Aarhus";  // Example city name
 
-        CityInfoDTO cityInfoDTO;
-
         try {
-            cityInfoDTO = CityService.getCityInfo(cityName);
+            CityInfoDTO cityInfoDTO = CityService.getCityInfo(cityName);
+            WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(cityName);
+            ActivityDTO activityDTO = ActivityService.createActivityWithEntities(cityName, cityInfoDTO, weatherInfoDTO);
+            System.out.println(activityDTO);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(cityInfoDTO);
-
-        WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(cityName);
-        System.out.println(weatherInfoDTO);
-
-
-
-
 
         /*  This is the code that was in the main method before the refactoring
         if (cityInfoArray != null && cityInfoArray.length > 0) {

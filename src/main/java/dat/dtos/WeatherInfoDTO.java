@@ -16,4 +16,17 @@ public class WeatherInfoDTO {
     private String locationName;
     @JsonProperty("CurrentData")
     private CurrentDataDTO currentDataDTO;
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+
+    public static class CurrentDataDTO {
+        private double temperature;
+        private String skyText;
+        private double humidity;
+        private String windText;
+    }
 }

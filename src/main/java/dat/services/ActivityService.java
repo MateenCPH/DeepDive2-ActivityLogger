@@ -6,19 +6,15 @@ import dat.dtos.WeatherInfoDTO;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ActivityService {
 
     //This method will be used to create a new ActivityDTO, and enrich it with data from the CityService and WeatherService
-    public static ActivityDTO createActivity(String cityName, String exerciseType, LocalDate exerciseDate, double duration, double distance, String comment) {
+    public static ActivityDTO createActivityWithAttributes(String cityName, LocalDate exerciseDate, String exerciseType, LocalTime timeOfDay, double duration, double distance, String comment) {
 
-        // Create the base ActivityDTO
-        ActivityDTO activityDTO = new ActivityDTO();
-        activityDTO.setExerciseType(exerciseType);
-        activityDTO.setExerciseDate(exerciseDate);
-        activityDTO.setDuration(duration);
-        activityDTO.setDistance(distance);
-        activityDTO.setComment(comment);
+        // Enrich with WeatherInfo
+        WeatherInfoDTO weatherInfo = WeatherService.getWeatherInfo(cityName);
 
         // Enrich with CityInfo
         CityInfoDTO cityInfoDTO = null;
@@ -27,17 +23,11 @@ public class ActivityService {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        if (cityInfoDTO != null) {
-            activityDTO.setCityInfoDTO(cityInfoDTO);  // Get the first result for the city
-        }
+        return new ActivityDTO(exerciseDate, exerciseType, timeOfDay, duration, distance, comment,cityInfoDTO, weatherInfo);  // Return the enriched ActivityDTO
+    }
 
-        // Enrich with WeatherInfo
-        WeatherInfoDTO weatherInfo = WeatherService.getWeatherInfo(cityName);
-        if (weatherInfo != null) {
-            activityDTO.setWeatherInfoDTO(weatherInfo);
-        }
-
-        return activityDTO;  // Return the enriched ActivityDTO
+    public static ActivityDTO createActivityWithEntities(String cityName, CityInfoDTO cityInfoDTO, WeatherInfoDTO weatherInfoDTO) {
+        return new ActivityDTO(LocalDate.now(), "Running", LocalTime.now(), 30.0, 5.0, "Good run", cityInfoDTO, weatherInfoDTO);
     }
 }
 
