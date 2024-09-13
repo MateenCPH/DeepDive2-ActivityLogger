@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 
 public class ActivityDTO {
-    private String exerciseDate;
+    private LocalDate exerciseDate;
     private String exerciseType;
     private String timeOfDay;
     private double duration;

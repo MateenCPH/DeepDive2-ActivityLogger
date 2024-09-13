@@ -1,15 +1,11 @@
 package dat;
 
-import dat.config.HibernateConfig;
-import dat.daos.PersonDAO;
 import dat.dtos.CityInfoDTO;
-import dat.dtos.KommuneDTO;
 import dat.dtos.WeatherInfoDTO;
-import dat.entities.Person;
 import dat.services.CityService;
 import dat.services.WeatherService;
-import jakarta.persistence.EntityManagerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
@@ -18,10 +14,16 @@ public class Main {
         long startTime = System.currentTimeMillis();
         String cityName = "Aarhus";  // Example city name
 
-        CityInfoDTO[] cityInfoArray = CityService.getCityInfo(CityInfoDTO[].class, cityName);
-        System.out.println(Arrays.toString(cityInfoArray));
+        CityInfoDTO cityInfoDTO;
 
-        WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(WeatherInfoDTO.class, cityName);
+        try {
+            cityInfoDTO = CityService.getCityInfo(cityName);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(cityInfoDTO);
+
+        WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(cityName);
         System.out.println(weatherInfoDTO);
 
 
