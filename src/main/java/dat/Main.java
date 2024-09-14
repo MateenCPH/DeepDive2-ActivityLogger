@@ -1,32 +1,33 @@
 package dat;
 
 import dat.config.HibernateConfig;
-import dat.daos.PersonDAO;
+import dat.dtos.ActivityDTO;
 import dat.dtos.CityInfoDTO;
-import dat.dtos.KommuneDTO;
 import dat.dtos.WeatherInfoDTO;
-import dat.entities.Person;
+import dat.services.ActivityService;
 import dat.services.CityService;
 import dat.services.WeatherService;
 import jakarta.persistence.EntityManagerFactory;
 
-import java.util.Arrays;
+import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("activitylogger");
+
 // Record the start time
         long startTime = System.currentTimeMillis();
         String cityName = "Aarhus";  // Example city name
 
-        CityInfoDTO[] cityInfoArray = CityService.getCityInfo(CityInfoDTO[].class, cityName);
-        System.out.println(Arrays.toString(cityInfoArray));
-
-        WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(WeatherInfoDTO.class, cityName);
-        System.out.println(weatherInfoDTO);
-
-
-
-
+        try {
+            CityInfoDTO cityInfoDTO = CityService.getCityInfo(cityName);
+            WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(cityName);
+            ActivityDTO activityDTO = ActivityService.createActivityWithEntities(cityName, cityInfoDTO, weatherInfoDTO);
+            System.out.println(activityDTO);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         /*  This is the code that was in the main method before the refactoring
         if (cityInfoArray != null && cityInfoArray.length > 0) {
