@@ -15,7 +15,7 @@ public class WeatherInfoDTO {
     @JsonProperty("LocationName")
     private String locationName;
     @JsonProperty("CurrentData")
-    private CurrentDataDTO currentDataDTO;
+    private CurrentDataDTO currentData;
 
 
     @Data

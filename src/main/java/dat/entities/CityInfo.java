@@ -24,7 +24,7 @@ public class CityInfo {
     //Properties class
     @Column(name= "building_code", nullable = false)
     private int buildingCode;
-    @Column(name= "population", nullable = false)
+    @Column(name= "population", nullable = true)
     private Integer population;
 
     private double latitude;

@@ -1,9 +1,13 @@
 package dat;
 
 import dat.config.HibernateConfig;
+import dat.daos.ActivityDAO;
 import dat.dtos.ActivityDTO;
 import dat.dtos.CityInfoDTO;
 import dat.dtos.WeatherInfoDTO;
+import dat.entities.Activity;
+import dat.entities.CityInfo;
+import dat.entities.WeatherInfo;
 import dat.services.ActivityService;
 import dat.services.CityService;
 import dat.services.WeatherService;
@@ -15,16 +19,50 @@ public class Main {
     public static void main(String[] args) {
 
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("activitylogger");
+        ActivityDAO activityDAO = new ActivityDAO(emf);
 
 // Record the start time
         long startTime = System.currentTimeMillis();
-        String cityName = "Aarhus";  // Example city name
+        String cityName = "Roskilde";  // Example city name
 
         try {
+            //Build the CityInfoDTO
             CityInfoDTO cityInfoDTO = CityService.getCityInfo(cityName);
+            //Build the CityInfo from the data provided by the CityInfoDTO
+            CityInfo cityInfo = CityInfo.builder()
+                    .cityName(cityInfoDTO.getName())
+                    .buildingCode(cityInfoDTO.getProperties().getBuildingCode())
+                    .population(cityInfoDTO.getProperties().getPopulation())
+                    .latitude(cityInfoDTO.getVisualCenter().get(1))
+                    .longitude(cityInfoDTO.getVisualCenter().get(0))
+                    .municipality(cityInfoDTO.getMunicipalities().get(0).getName())
+                    .build();
+
+            //Build the WeatherInfoDTO
             WeatherInfoDTO weatherInfoDTO = WeatherService.getWeatherInfo(cityName);
-            ActivityDTO activityDTO = ActivityService.createActivityWithEntities(cityName, cityInfoDTO, weatherInfoDTO);
-            System.out.println(activityDTO);
+            //Build the WeatherInfo from the data provided by the WeatherInfoDTO
+            WeatherInfo weatherInfo = WeatherInfo.builder()
+                    .locationName(weatherInfoDTO.getLocationName())
+                    .temperature(weatherInfoDTO.getCurrentData().getTemperature())
+                    .skyText(weatherInfoDTO.getCurrentData().getSkyText())
+                    .windText(weatherInfoDTO.getCurrentData().getWindText())
+                    .build();
+
+            //Build the Activity with the CityInfo and WeatherInfo entities
+            Activity activity = Activity.builder()
+                    .exerciseDate(java.time.LocalDate.now())
+                    .exerciseType("Running")
+                    .timeOfDay(java.time.LocalTime.now())
+                    .duration(30.0)
+                    .distance(5.0)
+                    .comment("Morning run " + cityName)
+                    .cityInfo(cityInfo)
+                    .weatherInfo(weatherInfo)
+                    .build();
+
+            Activity persistedActivity = activityDAO.create(activity);
+
+            //System.out.println(activityDTO);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
