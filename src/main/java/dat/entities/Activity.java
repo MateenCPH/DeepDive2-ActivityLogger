@@ -8,17 +8,22 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "activity")
+@NamedQuery(name = "Activity.findByDate", query = "SELECT a FROM Activity a WHERE a.exerciseDate = :exerciseDate")
+@NamedQuery(name = "Activity.getAll", query = "SELECT a FROM Activity a")
 
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "exercise_date", nullable = false)
@@ -60,4 +65,16 @@ public class Activity {
     public void preUpdate() {
         updatedDateTime = LocalDateTime.now();
     }
+
+    /*@Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Activity activity)) return false;
+        return Double.compare(duration, activity.duration) == 0 && Double.compare(distance, activity.distance) == 0 && Objects.equals(id, activity.id) && Objects.equals(exerciseDate, activity.exerciseDate) && Objects.equals(exerciseType, activity.exerciseType) && Objects.equals(timeOfDay, activity.timeOfDay) && Objects.equals(comment, activity.comment) && Objects.equals(cityInfo, activity.cityInfo) && Objects.equals(weatherInfo, activity.weatherInfo) && Objects.equals(createdDateTime, activity.createdDateTime) && Objects.equals(updatedDateTime, activity.updatedDateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, exerciseDate, exerciseType, timeOfDay, duration, distance, comment, cityInfo, weatherInfo, createdDateTime, updatedDateTime);
+    }*/
 }

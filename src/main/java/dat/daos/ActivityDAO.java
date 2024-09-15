@@ -1,17 +1,25 @@
 package dat.daos;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dat.dtos.ActivityDTO;
 import dat.entities.Activity;
 import dat.entities.CityInfo;
 import dat.entities.WeatherInfo;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ActivityDAO implements IDAO<Activity> {
     private final EntityManagerFactory emf;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ActivityDAO(EntityManagerFactory emf) {
         this.emf = emf;
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
 
@@ -79,6 +87,30 @@ public class ActivityDAO implements IDAO<Activity> {
 
     @Override
     public Set<Activity> getAll() {
-        return Set.of();
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Activity> query = em.createNamedQuery("Activity.getAll", Activity.class);
+            return query.getResultStream().collect(Collectors.toSet());
+        }
+    }
+
+    public String getAllAsJson() {
+        Set<Activity> activities = getAll();
+        List<ActivityDTO> activityDTOs = activities.stream()
+                .map(ActivityDTO::new) //Convert each activity to its corresponding DTO
+                .collect(Collectors.toList());
+        try {
+            return objectMapper.writeValueAsString(activityDTOs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error converting activities to JSON";
+        }
+    }
+
+    public Set<Activity> getActivityByDate(LocalDate date) {
+        try (EntityManager em = emf.createEntityManager()) {
+            TypedQuery<Activity> query = em.createNamedQuery("Activity.findByDate", Activity.class);
+            query.setParameter("exerciseDate", date);
+            return query.getResultStream().collect(Collectors.toSet());
+        }
     }
 }

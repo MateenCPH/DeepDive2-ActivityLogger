@@ -2,6 +2,7 @@ package dat.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dat.entities.WeatherInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,9 @@ public class WeatherInfoDTO {
     private String locationName;
     @JsonProperty("CurrentData")
     private CurrentDataDTO currentData;
+
+    public WeatherInfoDTO(WeatherInfo weatherInfo) {
+    }
 
 
     @Data

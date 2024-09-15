@@ -1,10 +1,7 @@
 package dat.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
@@ -34,5 +31,6 @@ public class WeatherInfo {
     private String windText;
 
      @OneToOne(mappedBy = "weatherInfo", cascade = CascadeType.ALL)
+     @ToString.Exclude
     private Activity activity;
 }

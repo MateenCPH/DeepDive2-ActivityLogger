@@ -3,6 +3,7 @@ package dat.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import dat.entities.CityInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,9 @@ public class CityInfoDTO {
     private List<Double> visualCenter;
     @JsonSetter("kommuner")
     private List<KommuneDTO> municipalities;
+
+    public CityInfoDTO(CityInfo cityInfo) {
+    }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)

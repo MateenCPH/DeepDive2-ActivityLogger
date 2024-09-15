@@ -1,21 +1,20 @@
 package dat.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "city_info")
 
 public class CityInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name = "city_name", nullable = false)
@@ -33,6 +32,7 @@ public class CityInfo {
     private String municipality;
 
     @OneToOne(mappedBy = "cityInfo", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Activity activity;
 
 
