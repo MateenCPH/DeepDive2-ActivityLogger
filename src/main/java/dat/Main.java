@@ -26,8 +26,8 @@ public class Main {
 // Record the start time
         long startTime = System.currentTimeMillis();
 
-        // Persist an Activity with CityInfo and WeatherInfo
-/*        String cityName = "Roskilde";  // Example city name
+        // Persist an Activity with CityInfoDTO and WeatherInfoDTO
+        /*String cityName = "Lyngby";  // Example city name
 
         try {
             //Build the CityInfoDTO
@@ -54,12 +54,12 @@ public class Main {
 
             //Build the Activity with the CityInfo and WeatherInfo entities
             Activity activity = Activity.builder()
-                    .exerciseDate(java.time.LocalDate.now())
-                    .exerciseType("Running")
+                    .exerciseDate(java.time.LocalDate.of(2024,9,14))
+                    .exerciseType("Fitness")
                     .timeOfDay(java.time.LocalTime.now())
                     .duration(30.0)
                     .distance(5.0)
-                    .comment("Morning run " + cityName)
+                    .comment("Morning workout " + cityName)
                     .cityInfo(cityInfo)
                     .weatherInfo(weatherInfo)
                     .build();
@@ -69,7 +69,7 @@ public class Main {
             //System.out.println(activityDTO);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
-        }   */
+        }*/
 
         //Get all activities and print them out
         Set<Activity> activities = activityDAO.getAll();
@@ -77,11 +77,11 @@ public class Main {
 
 
         //Get all activities and convert them to JSON
-        //String jsonActivites = activityDAO.getAllAsJson();
-        //System.out.println(jsonActivites);
+        String jsonActivites = activityDAO.getAllAsJson();
+        System.out.println(jsonActivites);
 
         //Get activity by date
-        //<Activity> activityByDate = activityDAO.getActivityByDate(LocalDate.of(2024, 9, 14));
+        //Set<Activity> activityByDate = activityDAO.getActivityByDate(LocalDate.of(2024, 9, 14));
         //activityByDate.forEach(System.out::println);
 
         long endTime = System.currentTimeMillis();

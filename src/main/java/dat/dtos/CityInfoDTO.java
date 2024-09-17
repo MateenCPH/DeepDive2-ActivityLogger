@@ -27,6 +27,12 @@ public class CityInfoDTO {
     private List<KommuneDTO> municipalities;
 
     public CityInfoDTO(CityInfo cityInfo) {
+        this.name = cityInfo.getCityName();
+        this.properties = new Properties();
+        this.properties.setBuildingCode(cityInfo.getBuildingCode());
+        this.properties.setPopulation(cityInfo.getPopulation());
+        this.visualCenter = List.of(cityInfo.getLatitude(), cityInfo.getLongitude());
+        this.municipalities = List.of(new KommuneDTO(cityInfo.getMunicipality(), ""));
     }
 
     @Data

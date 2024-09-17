@@ -19,6 +19,8 @@ public class WeatherInfoDTO {
     private CurrentDataDTO currentData;
 
     public WeatherInfoDTO(WeatherInfo weatherInfo) {
+        this.locationName = weatherInfo.getLocationName();
+        this.currentData = new CurrentDataDTO(weatherInfo.getCurrentData());
     }
 
 
